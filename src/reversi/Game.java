@@ -1,10 +1,10 @@
 package reversi;
 
 import java.util.Scanner;
-
 import reversi.Models.Bot;
 import reversi.Models.Human;
 import reversi.Models.Player;
+import reversi.Models.StupidBot;
 import reversi.Utilities.MessagesUtility;
 
 public final class Game {
@@ -13,21 +13,21 @@ public final class Game {
     private Player player2;
 
     public Game() {
-        // TODO document why this constructor is empty
-    }
-
-    public void start() {
         MessagesUtility.start();
         int type = getType();
 
         switch (type) {
             case 1 -> {
-                player1 = new Human('●'); // X, белые
-                player2 = new Human('○'); // O, черные
+                this.player1 = new Human(1); // X, черные
+                this.player2 = new Human(2); // O, белые
             }
             case 2 -> {
-                player1 = new Human('●'); // X, белые
-                player2 = new Bot('○'); // O, черные
+                this.player1 = new Human(1); // X, черные
+                this.player2 = new StupidBot(2); // O, белые
+            }
+            case 3 -> {
+                this.player1 = new Human(1); // X, черные
+                this.player2 = new Bot(2); // O, белые
             }
             default -> {
                 // ...
@@ -37,34 +37,17 @@ public final class Game {
         run();
     }
 
-    private void run() {
-        while (true) {
-            player1.play(table);
-            if (isWinnerFound()) {
-                break;
-            }
-
-            player2.play(table);
-            if (isWinnerFound()) {
-                break;
-            }
-        }
+    /**
+     * @return очки Player1
+     */
+    public Integer score() {
+        return table.countNumX();
     }
 
-    private boolean isWinnerFound() {
-        if ((player1.getHasMoves() && player2.getHasMoves()) || table.isFull()) {
-            if (table.countNumX() > table.countNumO()) {
-                MessagesUtility.win("Игрок 1");
-            } else if (table.countNumO() > table.countNumX()) {
-                MessagesUtility.win("Игрок 2");
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
+    /**
+     * @return 1 - игрок против игрока; 2 - игрок против бота (случайный ход); 3 - игрок против бота
+     * (обычный ход); 4 - игрок против бота (умный ход).
+     */
     private static int getType() {
         Scanner scanner = new Scanner(System.in);
 
@@ -87,5 +70,45 @@ public final class Game {
         } while (flag);
 
         return type;
+    }
+
+    /**
+     * Запуск игры.
+     */
+    private void run() {
+        while (true) {
+            player1.play(table);
+            if (isWinnerFound()) {
+                break;
+            }
+
+            player2.play(table);
+            if (isWinnerFound()) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * @return true, если найден победитель.
+     */
+    private boolean isWinnerFound() {
+        if ((!player1.getHasMoves() && !player2.getHasMoves()) || table.isFull()) {
+            if (table.countNumX() > table.countNumO()) {
+                MessagesUtility.win("Игрок 1");
+                table.print(player1);
+            } else if (table.countNumO() > table.countNumX()) {
+                MessagesUtility.win("Игрок 2");
+                table.print(player2);
+            } else {
+                table.print();
+                MessagesUtility.draw();
+            }
+
+            MessagesUtility.score(table.countNumX(), table.countNumO());
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,22 +1,23 @@
 package reversi.Models;
 
 import java.util.Scanner;
-
 import javafx.util.Pair;
 import reversi.Table;
 import reversi.Utilities.MessagesUtility;
 
 public class Human extends Player {
-    public Human(char name) {
-        super(name);
+
+    /**
+     * @param position - 1 или 2
+     */
+    public Human(int position) {
+        super(position);
     }
 
-    @Override
-    protected void chooseMove(Table table) {
-        Pair<Integer, Integer> pair = parseMove();
-        table.updateBoard(pair.getKey(), pair.getValue(), this);
-    }
 
+    /**
+     * @return - пара координат
+     */
     private static Pair<Integer, Integer> parseMove() {
         Scanner scanner = new Scanner(System.in);
         boolean flag = true;
@@ -26,7 +27,7 @@ public class Human extends Player {
         do {
             MessagesUtility.enterCell();
             String input = scanner.nextLine().trim();
-            if (input == null || "".equals(input)) {
+            if ("".equals(input)) {
                 MessagesUtility.errorMove();
                 continue;
             }
@@ -40,7 +41,7 @@ public class Human extends Player {
             try {
                 i = Integer.parseInt(vals[0]);
                 j = Integer.parseInt(vals[1]);
-                if (i < 0 || i >= 8 || j < 0 || j >= 8) {
+                if (i < 0 || i >= Table.getSize() || j < 0 || j >= Table.getSize()) {
                     MessagesUtility.errorMove();
                     continue;
                 }
@@ -52,5 +53,18 @@ public class Human extends Player {
         } while (flag);
 
         return new Pair<>(i, j);
+    }
+
+    @Override
+    protected void chooseMove(Table table) {
+        Pair<Integer, Integer> pair;
+        do {
+            pair = parseMove();
+            if (!validMoves[pair.getKey()][pair.getValue()]) {
+                System.out.println("Сюда ходить нельзя. Попробуйте еще раз");
+            }
+        } while (!validMoves[pair.getKey()][pair.getValue()]);
+
+        table.updateBoard(pair.getKey(), pair.getValue(), this);
     }
 }

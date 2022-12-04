@@ -1,29 +1,30 @@
 package reversi.Utilities;
 
+/**
+ * Color enum
+ */
 public final class MessagesUtility {
+
     private MessagesUtility() {
 
     }
 
     public static void help() {
-        String help = """
-                Добро пожаловать в игру "Реверси"!
-                               
-                Доступные команды:
-                – Начать играть: /start;
-                – Правила игры: /rules;
-                – Текущий счет: /score;
-                – Выход из программы: /exit.
-                """;
+        String help = """               
+            Доступные команды:
+            – Начать играть: /start;
+            – Лучший счет Player 1: /score;
+            – Правила игры: /rules;
+            – Выход из программы: /exit.
+            """;
 
         System.out.println(help);
     }
 
     public static void rules() {
         String rules = """
-                Правила игры:
-                todo
-                """;
+               Правила игры: https://www.mosigra.ru/reversi/rules/
+            """;
 
         System.out.println(rules);
     }
@@ -42,11 +43,11 @@ public final class MessagesUtility {
 
     public static void start() {
         System.out.println("""
-                Давайте начнем. Доступные типы игры:
-                1. Игрок-Игрок
-                2. Игрок-Бот
-                3. Игрор-Супербот
-                """);
+            Давайте начнем. Доступные типы игры:
+            1. Игрок vs Игрок
+            2. Игрок vs Рандом
+            3. Игрок vs notSmartБот™
+            """);
     }
 
     public static void enterStart() {
@@ -58,15 +59,31 @@ public final class MessagesUtility {
     }
 
     public static void win(String s) {
-        System.out.printf("Победил %s.%n", s);
+        System.out.printf("%nПобедил %s.%n", s);
     }
 
     public static void enterCell() {
-        System.out.println("Формат ввода хода \"i<space>j\", где i, j – номер ячейки, начиная с 0. Например, 2 3.");
+        System.out.println("Формат ввода хода \"i j\", где i, j – номер ячейки");
         System.out.print("Ввод: ");
     }
 
     public static void errorMove() {
         System.out.print("Неверный формат ввода ячейки. ");
+    }
+
+    public static void run() {
+        System.out.println("Добро пожаловать в игру \"Реверси\"!");
+    }
+
+    public static void score(int countNumX, int countNumO) {
+        System.out.printf("[черные:белые] Счет: %d:%d%n", countNumX, countNumO);
+    }
+
+    public static void draw() {
+        System.out.println("%nНичья!");
+    }
+
+    public static void bestScore(Integer maxScore) {
+        System.out.printf("Лучший счет Player 1: %d%n%n", maxScore);
     }
 }
