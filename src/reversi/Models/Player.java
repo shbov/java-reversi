@@ -1,5 +1,7 @@
 package reversi.Models;
 
+import java.util.ArrayList;
+import java.util.List;
 import reversi.Table;
 import reversi.Utilities.Color;
 import reversi.Utilities.MessagesUtility;
@@ -46,6 +48,7 @@ public abstract class Player {
     public void play(Table table) {
         System.out.printf("Ход %s (%s фишки)%n", getName(), getColoredName());
         setValidMovesArray(table.getValidMovesFor(this));
+        showValidMoves();
 
         if (!hasValidMoveLeft()) {
             setHasMoves(false);
@@ -61,6 +64,21 @@ public abstract class Player {
             chooseMove(table);
             setValidMovesArray(null);
         }
+    }
+
+    private void showValidMoves() {
+        System.out.print("Доступные ходы: ");
+        List<String> all = new ArrayList<>();
+        for (int i = 0; i < Table.getSize(); i++) {
+            for (int j = 0; j < Table.getSize(); j++) {
+                if (validMoves[i][j]) {
+                    all.add("(%d, %d)".formatted(i, j));
+                }
+            }
+        }
+
+        System.out.println(String.join(", ", all));
+        System.out.println();
     }
 
     protected boolean hasValidMoveLeft() {
